@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📚 Biblioteca Digital</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1><i class="fas fa-book"></i> Biblioteca Digital</h1>
+                <div class="status-indicator">
+                    <span id="connectionStatus" class="status offline">
+                        <i class="fas fa-circle"></i> Offline
+                    </span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="nav-tabs">
+            <button class="nav-tab active" data-tab="dashboard">
+                <i class="fas fa-chart-pie"></i> Dashboard
+            </button>
+            <button class="nav-tab" data-tab="livros">
+                <i class="fas fa-book"></i> Livros
+            </button>
+            <button class="nav-tab" data-tab="emprestimos">
+                <i class="fas fa-hand-holding"></i> Empréstimos
+            </button>
+            <button class="nav-tab" data-tab="buscar">
+                <i class="fas fa-search"></i> Buscar
+            </button>
+        </nav>
+
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="tab-content active">
+            <div class="section-header">
+                <h2><i class="fas fa-chart-pie"></i> Dashboard</h2>
+                <button id="refreshStats" class="btn btn-secondary">
+                    <i class="fas fa-sync-alt"></i> Atualizar
+                </button>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="totalLivros">-</h3>
+                        <p>Total de Livros</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon available">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="livrosDisponiveis">-</h3>
+                        <p>Livros Disponíveis</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon unavailable">
+                        <i class="fas fa-times-circle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="livrosIndisponiveis">-</h3>
+                        <p>Livros Emprestados</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon active">
+                        <i class="fas fa-hand-holding"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="emprestimosAtivos">-</h3>
+                        <p>Empréstimos Ativos</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="emprestimosAtrasados">-</h3>
+                        <p>Empréstimos Atrasados</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="recent-activity">
+                <h3>Atividade Recente</h3>
+                <div id="recentActivity" class="activity-list">
+                    <!-- Atividade será carregada via JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Livros Section -->
+        <section id="livros" class="tab-content">
+            <div class="section-header">
+                <h2><i class="fas fa-book"></i> Gestão de Livros</h2>
+                <button id="addLivroBtn" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Novo Livro
+                </button>
+            </div>
+
+            <div class="filters">
+                <select id="livroFilter" class="filter-select">
+                    <option value="all">Todos os livros</option>
+                    <option value="available">Disponíveis</option>
+                    <option value="unavailable">Emprestados</option>
+                </select>
+                <button id="refreshLivros" class="btn btn-secondary">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Título</th>
+                            <th>Autor</th>
+                            <th>ISBN</th>
+                            <th>Ano</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="livrosTableBody">
+                        <!-- Dados serão carregados via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Empréstimos Section -->
+        <section id="emprestimos" class="tab-content">
+            <div class="section-header">
+                <h2><i class="fas fa-hand-holding"></i> Gestão de Empréstimos</h2>
+                <button id="addEmprestimoBtn" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Novo Empréstimo
+                </button>
+            </div>
+
+            <div class="filters">
+                <select id="emprestimoFilter" class="filter-select">
+                    <option value="all">Todos os empréstimos</option>
+                    <option value="active">Ativos</option>
+                    <option value="returned">Devolvidos</option>
+                    <option value="overdue">Atrasados</option>
+                </select>
+                <button id="refreshEmprestimos" class="btn btn-secondary">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Livro</th>
+                            <th>Pessoa</th>
+                            <th>Email</th>
+                            <th>Data Empréstimo</th>
+                            <th>Data Devolução</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="emprestimosTableBody">
+                        <!-- Dados serão carregados via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Buscar Section -->
+        <section id="buscar" class="tab-content">
+            <div class="section-header">
+                <h2><i class="fas fa-search"></i> Busca Avançada</h2>
+            </div>
+
+            <div class="search-container">
+                <div class="search-box">
+                    <input type="text" id="searchTerm" placeholder="Digite título, autor, ISBN ou termo geral...">
+                    <button id="searchBtn" class="btn btn-primary">
+                        <i class="fas fa-search"></i> Buscar
+                    </button>
+                </div>
+                
+                <div class="search-filters">
+                    <select id="searchType">
+                        <option value="all">Busca Geral</option>
+                        <option value="title">Por Título</option>
+                        <option value="author">Por Autor</option>
+                        <option value="isbn">Por ISBN</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="searchResults" class="search-results">
+                <!-- Resultados serão exibidos aqui -->
+            </div>
+        </section>
+    </div>
+
+    <!-- Modal para Livro -->
+    <div id="livroModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="livroModalTitle">Novo Livro</h3>
+                <span class="close" id="closeLivroModal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="livroForm">
+                    <input type="hidden" id="livroId">
+                    <div class="form-group">
+                        <label for="titulo">Título *</label>
+                        <input type="text" id="titulo" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="autor">Autor *</label>
+                        <input type="text" id="autor" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="isbn">ISBN *</label>
+                        <input type="text" id="isbn" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="anoPublicacao">Ano de Publicação</label>
+                            <input type="number" id="anoPublicacao" min="1000" max="2024">
+                        </div>
+                        <div class="form-group">
+                            <label for="editora">Editora</label>
+                            <input type="text" id="editora">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="descricao">Descrição</label>
+                        <textarea id="descricao" rows="3"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" id="cancelLivro">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Salvar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Empréstimo -->
+    <div id="emprestimoModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="emprestimoModalTitle">Novo Empréstimo</h3>
+                <span class="close" id="closeEmprestimoModal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="emprestimoForm">
+                    <input type="hidden" id="emprestimoId">
+                    <div class="form-group">
+                        <label for="livroSelect">Livro *</label>
+                        <select id="livroSelect" required>
+                            <option value="">Selecione um livro...</option>
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="nomePessoa">Nome da Pessoa *</label>
+                            <input type="text" id="nomePessoa" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="emailPessoa">Email *</label>
+                            <input type="email" id="emailPessoa" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="telefonePessoa">Telefone</label>
+                            <input type="tel" id="telefonePessoa">
+                        </div>
+                        <div class="form-group">
+                            <label for="diasEmprestimo">Dias de Empréstimo</label>
+                            <input type="number" id="diasEmprestimo" min="1" max="30" value="7">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="observacoes">Observações</label>
+                        <textarea id="observacoes" rows="3"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" id="cancelEmprestimo">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Realizar Empréstimo</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Carregando...</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
